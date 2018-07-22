@@ -17,8 +17,30 @@ AWESOMENESS = [
 @app.route('/')
 def start_here():
     """Home page."""
+    form_string = ""
 
-    return "<!doctype html><html>Hi! This is the home page.</html>"
+    for compliment in AWESOMENESS:
+    	form_string += "<option value={}>{}</option> \n".format(compliment, compliment.title())
+
+
+    return """
+   		<!doctype html>
+   		<html>
+   		Hi! This is the home page.
+   		<a href="/hello">Visit hello</a>
+   		
+   		<form action="/greet">
+   		<p>What's your name?</p>
+   		<input type="text" name="person">
+
+   		<p>Choose a compliment</p>
+   		<select name="compliment">
+   			{}
+   		<input type="submit" value="Submit">
+   		</select>
+   		</form>
+   		</html>
+   		""".format(form_string)
 
 
 @app.route('/hello')
@@ -48,7 +70,8 @@ def greet_person():
 
     player = request.args.get("person")
 
-    compliment = choice(AWESOMENESS)
+    compliment = request.args.get("compliment")
+
 
     return """
     <!doctype html>
