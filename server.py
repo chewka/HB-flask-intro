@@ -13,6 +13,11 @@ AWESOMENESS = [
     'oh-so-not-meh', 'brilliant', 'ducky', 'coolio', 'incredible',
     'wonderful', 'smashing', 'lovely']
 
+INSULT = [
+ 	'bad', 'mean', 'silly', 'kinda-funny-looking', 'incompetent', 
+ 	'lazy', 'boring', 'dull'
+ 	]
+
 
 @app.route('/')
 def start_here():
@@ -21,6 +26,12 @@ def start_here():
 
     for compliment in AWESOMENESS:
     	form_string += "<option value={}>{}</option> \n".format(compliment, compliment.title())
+
+    insult_string = ""
+
+    for insult in INSULT:
+    	insult_string += "<option value={}>{}</option> \n".format(insult, insult.title())
+
 
 
     return """
@@ -39,8 +50,45 @@ def start_here():
    		<input type="submit" value="Submit">
    		</select>
    		</form>
+   		
+   		<hr>
+
+   		<p>Or, would you prefer an insult?</p>
+
+   		<form action="/diss">
+   		<p>What's your name?</p>
+   		<input type="text" name="person">
+
+   		<p>Choose an insult</p>
+   		<select name="insult">
+   			{}
+   		<input type="submit" value="Submit">
+   		</select>
+   		</form>
    		</html>
-   		""".format(form_string)
+
+   		""".format(form_string, insult_string)
+
+
+@app.route('/diss')
+def say_insult():
+    """Say insults and prompt for user's name."""
+    player = request.args.get("person")
+
+    insult = request.args.get("insult")
+
+
+    return """
+    <!doctype html>
+    <html>
+      <head>
+        <title>An insult</title>
+      </head>
+      <body>
+        Hi, {}! I think you're {}!
+      </body>
+    </html>
+    """.format(player, insult)
 
 
 @app.route('/hello')
